@@ -1,3 +1,3 @@
 # TNT_Automacao
 
-RepositÃ³rio dos scripts de automaÃ§Ã£o de testes.
+Repositório dos scripts de Automação de Testes.
