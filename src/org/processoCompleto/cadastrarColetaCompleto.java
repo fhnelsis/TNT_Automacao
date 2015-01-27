@@ -162,11 +162,12 @@ public class cadastrarColetaCompleto {
 		driver.findElement(By.id("dsInfColeta")).sendKeys("FHPN");
 
 		/* Detalhes da Coleta */
-		// TODO Driver não reconhece frame da aba dos detalhes da coleta.
 		driver.findElement(By.id("detalheColeta_spanTexto")).click();
 		driver.findElement(By.id("cliente.pessoa.nrIdentificacao")).sendKeys(
 				nroIdentificacaoDestinatario);
-
+		
+		// TODO Teste
+			
 		driver.findElement(By.id("vlMercadoria")).click();
 
 		// Wait carregar dados destinatário
