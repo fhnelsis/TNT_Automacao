@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.io.File;
 
 import org.junit.Test;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
@@ -15,7 +16,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.google.common.base.Predicate;
 import com.thoughtworks.selenium.SeleniumException;
 
 public class cadastrarColetaCompleto {
@@ -58,7 +58,6 @@ public class cadastrarColetaCompleto {
 	String nroIdentificacaoDestinatario = "02543945000428";
 	String horarioLimiteColeta = "20:00";
 
-	@SuppressWarnings("unchecked")
 	@Test
 	public void cadastrarColetaCompleto() throws Exception {
 		try {
@@ -76,53 +75,67 @@ public class cadastrarColetaCompleto {
 						InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,
 						true);
 
-		File file = new File("C:/dev/IEDriverServer.exe");
+		File file = new File("C:/dev/workspace/git/TNT_Automacao/lib/IEDriverServer.exe");
 		System.setProperty("webdriver.ie.driver", file.getAbsolutePath());
 		InternetExplorerDriver driver = new InternetExplorerDriver();
+		
+		
+		
+		
 
 		/* Manter Perfil */
 		driver.navigate().to(url);
-		driver.manage().window().maximize();
+		// driver.manage().window().maximize();
 
-		new WebDriverWait(driver, 10).until(
-				ExpectedConditions.visibilityOfElementLocated(By
-						.id(campoUsuario))).sendKeys(username);
-		new WebDriverWait(driver, 10)
-				.until(ExpectedConditions.visibilityOfElementLocated(By
-						.id(campoSenha))).sendKeys(password);
+		new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOfElementLocated(By.id(campoUsuario))).sendKeys(username);
+		new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOfElementLocated(By.id(campoSenha))).sendKeys(password);
 
-		String h1 = driver.getWindowHandle();
+		// Guarda a janela original
+		String parentWindow = driver.getWindowHandle().toString();
 
 		driver.findElement(By.id(botaoLogin)).click();
-		Thread.sleep(3000);
+		//new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOfElementLocated(By.id(botaoVoltar)));
+		
+		// Get the window handle of the new browser window opened.
+		String childWindow = (String) driver.getWindowHandles().toArray()[1];
 
-		driver.switchTo().window(h1).navigate().to(urlMeuPerfil);
-		driver.switchTo().frame(
-				driver.findElement(By.name(frameManterMeuPerfil)));
+		// Switch to newly opened window.
+		driver.switchTo().window(childWindow);
+
+		new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(By.id("back_button")));
+
+		// Switch back to main window.
+		driver.switchTo().window(parentWindow);
+		
+		
+
+		driver.navigate().to(urlMeuPerfil);
+		driver.switchTo().frame(driver.findElement(By.name(frameManterMeuPerfil)));
+		
+		
+		
+		
+		
+		
+		
 
 		// Wait carregar dados da filial logada
 		int size = 0;
 		while (size == 0) {
 			Thread.sleep(100);
-			size = driver.findElement(By.id(campoSGFilialLogado))
-					.getAttribute("value").length();
+			size = driver.findElement(By.id(campoSGFilialLogado)).getAttribute("value").length();
 		}
 
-		new WebDriverWait(driver, 20).until(
-				ExpectedConditions.visibilityOfElementLocated(By
-						.id(campoSGFilialLogado))).clear();
+		new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(By.id(campoSGFilialLogado))).clear();
 		driver.findElement(By.id(campoSGFilialLogado)).sendKeys(sgFilialLogado);
 		driver.findElement(By.name("filialLogado.pessoa.nmFantasia")).click();
-		String verificadorFilial = driver.findElement(
-				By.id(campoSGFilialLogado)).getAttribute("value");
+		String verificadorFilial = driver.findElement(By.id(campoSGFilialLogado)).getAttribute("value");
 
 		if (verificadorFilial.equalsIgnoreCase(sgFilialLogado)) {
 			driver.findElement(By.id(botaoCarregar)).click();
 			try {
-				driver.switchTo().parentFrame()
-						.findElement(By.id(mensagemSucesso));
-				new WebDriverWait(driver, 15).until(ExpectedConditions
-						.visibilityOfElementLocated(By.id(mensagemSucesso)));
+				driver.switchTo().parentFrame().findElement(By.id(mensagemSucesso));
+				new WebDriverWait(driver, 15).until(ExpectedConditions.visibilityOfElementLocated(By.id(mensagemSucesso)));
 				assertTrue(verificadorFilial.equals(sgFilialLogado));
 
 			} catch (Exception e) {
@@ -134,19 +147,31 @@ public class cadastrarColetaCompleto {
 
 		/* Cadastrar Coleta */
 		driver.navigate().to(urlCadastrarPedidoColeta);
-		
+
+		// Se aparecer erro 500, entra no tratamento.
+		try {
+			Alert alert = driver.switchTo().alert();
+			alert.accept();
+		} catch (Exception e) {
+		}
+
 		driver.switchTo().frame("pedidoColeta_iframe");
 		Select dropdown = new Select(driver.findElement(By.id("tpModoPedidoColeta")));
 		dropdown.selectByVisibleText("Balcão");
-		
-//		driver.switchTo().frame(driver.findElement(By.name(framePedidoColeta)));
+
 		new WebDriverWait(driver, 15).until(ExpectedConditions.visibilityOfElementLocated(By.id(campoCliente))).sendKeys(nroIdentificacaoCliente);
 		driver.findElement(By.id(campoHorarioLimite)).click();
 
-		
+		// AQUI
+		new WebDriverWait(driver, 20).until(new ExpectedCondition<Boolean>() {
+			public Boolean apply(WebDriver d) {
+				return d.findElement(By.id(campoNomePessoa))
+						.getAttribute("value").length() != 0;
+			}
+		});
+
 		new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOfElementLocated(By.id("hrLimiteColeta"))).sendKeys(horarioLimiteColeta);
 		driver.findElement(By.id("dsInfColeta")).sendKeys("FHPN");
-
 
 		// Wait carregar dados cliente
 		new WebDriverWait(driver, 20).until(new ExpectedCondition<Boolean>() {
@@ -165,7 +190,7 @@ public class cadastrarColetaCompleto {
 		driver.findElement(By.id("detalheColeta_spanTexto")).click();
 		driver.findElement(By.id("cliente.pessoa.nrIdentificacao")).sendKeys(
 				nroIdentificacaoDestinatario);
-			
+
 		driver.findElement(By.id("vlMercadoria")).click();
 
 		// Wait carregar dados destinatário
