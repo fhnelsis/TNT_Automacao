@@ -165,8 +165,6 @@ public class cadastrarColetaCompleto {
 		driver.findElement(By.id("detalheColeta_spanTexto")).click();
 		driver.findElement(By.id("cliente.pessoa.nrIdentificacao")).sendKeys(
 				nroIdentificacaoDestinatario);
-		
-		// TODO Teste
 			
 		driver.findElement(By.id("vlMercadoria")).click();
 
@@ -181,11 +179,6 @@ public class cadastrarColetaCompleto {
 		driver.findElement(By.id("vlMercadoria")).click();
 		driver.findElement(By.id("vlMercadoria")).sendKeys("");
 		driver.findElement(By.id("vlMercadoria")).sendKeys("100,00");
-
-		// new WebDriverWait(driver,
-		// 10).until(ExpectedConditions.visibilityOfElementLocated(By.id("vlMercadoria"))).sendKeys("100,00");
-		// new WebDriverWait(driver,
-		// 10).until(ExpectedConditions.visibilityOfElementLocated(By.id("vlMercadoria"))).sendKeys("100,00");
 
 		driver.findElement(By.id("psMercadoria")).click();
 		driver.findElement(By.id("psMercadoria")).sendKeys("100,000");

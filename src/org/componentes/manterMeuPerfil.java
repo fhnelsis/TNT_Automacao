@@ -14,8 +14,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.thoughtworks.selenium.SeleniumException;
 
-import javax.json.*;
-
 public class manterMeuPerfil extends preparadorAmbiente {
 
 	@Test
