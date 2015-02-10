@@ -23,34 +23,34 @@ public class cadastrarColetaCompleto {
 	String username = "joelson";
 	String password = "joelson";
 	String sgFilialLogado = "FLN";
-	String url = "http://homolog.mercurio.local/lms-ag3/";
+	String url = "http://homolog.mercurio.local/lms-hm/";
 
 	/* Constantes Gerais */
-	final String campoUsuario = "username";
-	final String campoSenha = "password";
-	final String botaoLogin = "loginButton";
-	final String botaoVoltar = "back_button";
-	final String mensagemSucesso = "message.div";
-	final String logo = "logo_img";
-	final String browser = "*internetexplorer";
+	 String campoUsuario = "username";
+	 String campoSenha = "password";
+	 String botaoLogin = "loginButton";
+	 String botaoVoltar = "back_button";
+	 String mensagemSucesso = "message.div";
+	 String logo = "logo_img";
+	 String browser = "*internetexplorer";
 
 	/* Constantes manterMeuPerfil */
-	final String urlMeuPerfil = url + "seguranca/manterMeuPerfil.do?cmd=main";
-	final String campoSGFilialLogado = "filialLogado.sgFilial";
-	final String botaoCarregar = "carregar";
-	final String frameManterMeuPerfil = "manterMeuPerfil_iframe";
+	 String urlMeuPerfil = url + "seguranca/manterMeuPerfil.do?cmd=main";
+	 String campoSGFilialLogado = "filialLogado.sgFilial";
+	 String botaoCarregar = "carregar";
+	 String frameManterMeuPerfil = "manterMeuPerfil_iframe";
 
 	/* Constantes cadastrarPedidoColeta */
-	final String urlCadastrarPedidoColeta = url
+	String urlCadastrarPedidoColeta = url
 			+ "coleta/cadastrarPedidoColeta.do?cmd=main";
-	final String campoCliente = "cliente.pessoa.nrIdentificacao";
-	final String campoHorarioLimite = "hrLimiteColeta";
-	final String campoModoColeta = "tpModoPedidoColeta";
-	final String campoHorarioLimiteColeta = "hrLimiteColeta";
-	final String campoContato = "hrLimiteColeta";
-	final String campoNomePessoa = "cliente.pessoa.nmPessoa";
-	final String framePedidoColeta = "pedidoColeta_iframe";
-	final String urlCadastrarPedidoColetaDetalhe = url
+	 String campoCliente = "cliente.pessoa.nrIdentificacao";
+	 String campoHorarioLimite = "hrLimiteColeta";
+	 String campoModoColeta = "tpModoPedidoColeta";
+	 String campoHorarioLimiteColeta = "hrLimiteColeta";
+	 String campoContato = "hrLimiteColeta";
+	 String campoNomePessoa = "cliente.pessoa.nmPessoa";
+	 String framePedidoColeta = "pedidoColeta_iframe";
+	 String urlCadastrarPedidoColetaDetalhe = url
 			+ "coleta/cadastrarPedidoColeta.do?cmd=detalheColeta";
 
 	/* Variáveis cadastrarPedidoColeta */
@@ -66,7 +66,7 @@ public class cadastrarColetaCompleto {
 		} catch (Exception e) {
 			// // Gamba da zueira
 			// throw new SeleniumException(
-			// "Erro: Algum erro ocorreu ao tentar finalizar os processos anteriores do IEDriver.");
+			// "Erro: Algum erro ocorreu ao tentar izar os processos anteriores do IEDriver.");
 		}
 		DesiredCapabilities ieCapabilities = DesiredCapabilities
 				.internetExplorer();
@@ -94,31 +94,21 @@ public class cadastrarColetaCompleto {
 		String parentWindow = driver.getWindowHandle().toString();
 
 		driver.findElement(By.id(botaoLogin)).click();
-		//new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOfElementLocated(By.id(botaoVoltar)));
-		
-		// Get the window handle of the new browser window opened.
-		String childWindow = (String) driver.getWindowHandles().toArray()[1];
 
-		// Switch to newly opened window.
-		driver.switchTo().window(childWindow);
-
-		new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(By.id("back_button")));
-
-		// Switch back to main window.
-		driver.switchTo().window(parentWindow);
+		new WebDriverWait(driver, 30).until(new ExpectedCondition<Boolean>() {
+			public Boolean apply(WebDriver d) {
+				return d.findElement(By.id(campoSenha))
+						.getAttribute("value").length() == 0;
+			}
+		});
+        
+        
 		
 		
-
+		
 		driver.navigate().to(urlMeuPerfil);
 		driver.switchTo().frame(driver.findElement(By.name(frameManterMeuPerfil)));
 		
-		
-		
-		
-		
-		
-		
-
 		// Wait carregar dados da filial logada
 		int size = 0;
 		while (size == 0) {
@@ -188,16 +178,14 @@ public class cadastrarColetaCompleto {
 
 		/* Detalhes da Coleta */
 		driver.findElement(By.id("detalheColeta_spanTexto")).click();
-		driver.findElement(By.id("cliente.pessoa.nrIdentificacao")).sendKeys(
-				nroIdentificacaoDestinatario);
+		driver.findElement(By.id("cliente.pessoa.nrIdentificacao")).sendKeys(nroIdentificacaoDestinatario);
 
 		driver.findElement(By.id("vlMercadoria")).click();
 
 		// Wait carregar dados destinatário
 		new WebDriverWait(driver, 20).until(new ExpectedCondition<Boolean>() {
 			public Boolean apply(WebDriver d) {
-				return d.findElement(By.id("nmDestinatario"))
-						.getAttribute("value").length() != 0;
+				return d.findElement(By.id("nmDestinatario")).getAttribute("value").length() != 0;
 			}
 		});
 
