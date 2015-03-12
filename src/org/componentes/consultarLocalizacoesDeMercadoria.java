@@ -48,20 +48,13 @@ public class consultarLocalizacoesDeMercadoria {
 		/*CHROME*/
 		DesiredCapabilities capabilities = new DesiredCapabilities();
 		capabilities.setJavascriptEnabled(true);
-
 		File file = new File("C:/dev/workspace/TNT_Automacao/chromedriver.exe");
 		System.setProperty("webdriver.chrome.driver", file.getAbsolutePath());
 		driver = new ChromeDriver();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 		//WebDriver driver = new RemoteWebDriver(capabilities);
 		//Capabilities actualCapabilities = ((RemoteWebDriver) file).getCapabilities();
-		
-
-		
-//		driver = new ChromeDriver();
-//		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-//		File file = new File("C:/dev/workspace/TNT_Automacao/IEDriverServer.exe");
-//		System.setProperty("webdriver.ie.driver", file.getAbsolutePath());
-		
+	
 	}
 
 	@Test
